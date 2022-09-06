@@ -261,14 +261,16 @@ def DisplayBlog():
                 postiddict2 = {"Postid" : str(Postid),"Title" : str(Title),"Content" : str(Content),"Author" : str(Fname),"Likes" : Likes}
                 list.append(postiddict2)
 
+   
     seen = set()
-    new_l = []
+    newlist = []
     for d in list:
         t = tuple(d.items())
         if t not in seen:
             seen.add(t)
-        new_l.append(d)        
-    return list
+            newlist.append(d)
+
+    return newlist
 
 
 

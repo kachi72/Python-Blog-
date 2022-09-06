@@ -1,6 +1,5 @@
 from __future__ import print_function
 from flask import Flask,request
-from flask_mysqldb import MySQL
 import controller
 
 app = Flask(__name__)
