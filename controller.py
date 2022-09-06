@@ -1,12 +1,6 @@
 import time
 import re
-from flask import request
 import dbconnect
-
-
-# #connecting to db
-# db = dbconnect.connection()  
-# cursor = db.cursor()
 
 #user validation
 def checkuser(userid):
@@ -62,13 +56,26 @@ def checkmail(email):
 def CreateUser(request):
     fname = request.form['fname']
     lname = request.form['lname']
+    password = request.form['password']
+    gender = request.form['gender']
+    number = request.form['number']
+    list = []
+    if bool(fname) != 1:
+        list.append("Enter First name")
+    if bool(lname) != 1:
+        list.append("Enter Last name")
+    if bool(password) != 1:
+        list.append("Enter password")
+    if bool(gender) != 1:
+        list.append("Enter gender")
+    if bool(number) != 1:
+        list.append("Enter phone number")
+    if list:
+        return list
     #email validation
     email = request.form['email']
     if checkmail(email) != 1:
         return("Invalid email")
-    password = request.form['password']
-    gender = request.form['gender']
-    number = request.form['number']
     db = dbconnect.connection()  
     cursor = db.cursor()
     userid = 0
@@ -109,7 +116,15 @@ def CreatePost(request):
     else:
         image = 0
     likes = 0
-    
+    list = []
+    if bool(userid) != 1:
+        list.append("Enter userid")
+    if bool(title) != 1:
+        list.append("Enter title")
+    if bool(content) != 1:
+        list.append("Enter content")
+    if list:
+        return list
     #check if user exists
     if checkuser(userid) != 1:
         return "Error, this user does not exist"
@@ -133,6 +148,13 @@ def CreateComment(request):
     userid = request.form['userid']
     postid = request.form['postid']
 
+    list = []
+    if bool(userid) != 1:
+        list.append("Enter userid")
+    if bool(postid) != 1:
+        list.append("Enter postid")
+    if list:
+        return list
     #check if user exists
     if checkuser(userid) != 1:
         return "Error, this user does not exist"
@@ -163,7 +185,15 @@ def DisplayUser(request):
     fname = request.form['fname']
     lname = request.form['lname']
     userid = request.form['userid']
-    
+    list = []
+    if bool(fname) != 1:
+        list.append("Enter First name")
+    if bool(lname) != 1:
+        list.append("Enter Last name")
+    if bool(userid) != 1:
+        list.append("Enter userid")
+    if list:
+        return list
     #check if user exists
     if checkuser(userid) != 1:
         return "Error, this user does not exist"
@@ -261,7 +291,7 @@ def DisplayBlog():
                 postiddict2 = {"Postid" : str(Postid),"Title" : str(Title),"Content" : str(Content),"Author" : str(Fname),"Likes" : Likes}
                 list.append(postiddict2)
 
-   
+   # removing duplicate posts from my list
     seen = set()
     newlist = []
     for d in list:
@@ -301,14 +331,6 @@ def Display():
 
     return
 
-    # #another way to print table
-    # try:
-    #     cursor.execute(sq1);
-    #     results = cursor.fetchall()
-    #     for row in results:
-    #         print(row, "\n");
-    # except:
-    #     print("Error extracting data");
 
 
 
@@ -320,27 +342,20 @@ def DeleteUser(request):
     userid = request.form['userid']
     fname = request.form['fname']
     lname = request.form['lname']
+    list = []
+    if bool(fname) != 1:
+        list.append("Enter First name")
+    if bool(lname) != 1:
+        list.append("Enter Last name")
+    if bool(userid) != 1:
+        list.append("Enter userid")
+    if list:
+        return list
 
     #check if user exists
     if checkuser(userid) != 1:
         return "Error, this user does not exist"
 
-    display = '''  SELECT * FROM Users  WHERE FIRSTNAME = %s AND LASTNAME = %s AND USERID = %s'''
-    info = [fname,lname,userid];
-    cursor.execute(display,info);
-    result = cursor.fetchall();
-    # for row in result:
-    #     Userid = row[0];
-    #     FirstName = row[1];
-    #     LastName = row[2];
-    #     Email = row[3];
-    #     Gender = row[5];
-    #     Number = row[6]
-    #     print("UserID: %s\nFirstName: %s\nLastName: %s\nEmail: %s\nGender: %s\nPhoneNumber: %s\n" % (Userid,FirstName,LastName,Email,Gender,Number));
-    # answer = input("Do you want to delete this profile, Yes or no:\n")
-    # list = [Userid];
-    # if answer.lower() == "no":
-    #     exit();
     list = [userid]
     try:
         delete = '''DELETE FROM USERS WHERE USERID = %s'''
@@ -360,7 +375,13 @@ def DeletePost(request):
     cursor = db.cursor()
     userid = request.form['userid']
     post = request.form['postid']
-
+    list = []
+    if bool(userid) != 1:
+        list.append("Enter userid")
+    if bool(post) != 1:
+        list.append("Enter postid")
+    if list:
+        return list
     #check if user exists
     if checkuser(userid) != 1:
         return "Error, this user does not exist"
@@ -373,18 +394,13 @@ def DeletePost(request):
     cursor.execute(display,info)
     result = cursor.fetchall()
     for row in result:
-        Postid = row[0]
         Userid = row[1]
-        Title = row[2]
-        Content = row[3]
     
     Userid2 = str(Userid)
     #check if user has access to delete post 
     if (userid != Userid2):
         return("You do not have access to delete this post")
-    # answer = input("Do you want to delete this post, Yes or no:\n");
-    # if answer.lower() == "no":
-    #     exit()
+    
     message = ''' DELETE FROM POSTS WHERE POSTID = %s ''';
     try:
         cursor.execute(message,info);
@@ -402,7 +418,14 @@ def DeleteComment(request):
     userid = request.form['userid']
     commentid = request.form['commentid']
     info = [commentid]
-
+    list = []
+    if bool(userid) != 1:
+        list.append("Enter userid")
+    if bool(commentid) != 1:
+        list.append("Enter commentid")
+    
+    if list:
+        return list
     #check if user exists
     if checkuser(userid) != 1:  
         return "Error, this user does not exist"
@@ -442,6 +465,12 @@ def Like(request):
     cursor = db.cursor()
 
     id = request.form['postid']
+    list = []
+    if bool(id) != 1:
+        list.append("Enter postid")
+    
+    if list:
+        return list
     message1 = ''' UPDATE POSTS SET LIKES = LIKES + 1 WHERE POSTID = %s '''
     info = [id]
     try:
@@ -460,6 +489,11 @@ def Unlike(request):
     cursor = db.cursor()
 
     id = request.form['postid']
+    list = []
+    if bool(id) != 1:
+        list.append("Enter postid")
+    if list:
+        return list
     message1 = ''' UPDATE POSTS SET LIKES = LIKES - 1 WHERE POSTID = %s '''
     info = [id]
     try:
@@ -474,6 +508,11 @@ def Unlike(request):
 
 #like and unlike
 def Interactions(request):
+    list = []
+    if bool(request.form['option']) != 1:
+        list.append("Enter option: like or unlike")
+    if list:
+        return list
     if (request.form['option'].lower()) == 'like':
         return Like(request)
     elif(request.form['option'].lower()) == 'unlike':
@@ -497,6 +536,15 @@ def Login(request):
             else:
                 return ("Invalid email")
         password = request.form['password']
+        list = []
+        if bool(user) != 1:
+            list.append("Enter userid")
+        if bool(password) != 1:
+            list.append("Enter password")
+        
+        if list:
+            return list
+        
         message = ' SELECT EMAIL,PASSWORD FROM USERS  '
 
         cursor.execute(message)
