@@ -4,11 +4,6 @@ from flask_mysqldb import MySQL
 import controller
 
 app = Flask(__name__)
-app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_USER'] = 'kachi'
-app.config['MYSQL_PASSWORD'] = 'kachiuser'
-app.config['MYSQL_DB'] = 'blog'
-mysql = MySQL(app)
 
 @app.route('/createuser', methods=['POST'])
 def createuser():
@@ -37,7 +32,7 @@ def deletecomment():
 @app.route('/displayposts', methods=['GET'])
 def displayposts():
     return controller.DisplayPosts()
-
+ 
 @app.route('/displayuser', methods=['GET'])
 def displayuser():
     return controller.DisplayUser(request)

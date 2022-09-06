@@ -1,16 +1,16 @@
-import mysql.connector
 import time
 import re
 from flask import request
+import dbconnect
 
 
-#connecting to db
-db = mysql.connector.connect(host = "localhost",user = "kachi",password = "kachiuser",db = "Blog")
-cursor = db.cursor()
+# #connecting to db
+# db = dbconnect.connection()  
+# cursor = db.cursor()
 
 #user validation
 def checkuser(userid):
-    db = mysql.connector.connect(host = "localhost",user = "kachi",password = "kachiuser",db = "Blog")
+    db = dbconnect.connection()  
     cursor = db.cursor()
     message = '''SELECT USERID FROM USERS'''
     cursor.execute(message)
@@ -24,7 +24,7 @@ def checkuser(userid):
     
 #post validation
 def checkpost(postid):
-    db = mysql.connector.connect(host = "localhost",user = "kachi",password = "kachiuser",db = "Blog")
+    db = dbconnect.connection()  
     cursor = db.cursor()
     message = '''SELECT POSTID FROM POSTS'''
     cursor.execute(message)
@@ -38,7 +38,7 @@ def checkpost(postid):
     
 #comment validation
 def checkcomment(commentid):
-    db = mysql.connector.connect(host = "localhost",user = "kachi",password = "kachiuser",db = "Blog")
+    db = dbconnect.connection()  
     cursor = db.cursor()
     message = '''SELECT COMMENTID FROM COMMENTS'''
     cursor.execute(message)
@@ -69,7 +69,7 @@ def CreateUser(request):
     password = request.form['password']
     gender = request.form['gender']
     number = request.form['number']
-    db = mysql.connector.connect(host = "localhost",user = "kachi",password = "kachiuser",db = "Blog")
+    db = dbconnect.connection()  
     cursor = db.cursor()
     userid = 0
     create =  '''INSERT INTO Users VALUES (%s, %s, %s, %s, %s, %s, %s) '''
@@ -96,7 +96,7 @@ def CreateUser(request):
 
 # #creating a post
 def CreatePost(request):
-    db = mysql.connector.connect(host = "localhost",user = "kachi",password = "kachiuser",db = "Blog")
+    db = dbconnect.connection()  
     cursor = db.cursor()
     postid = 0
     userid = request.form['userid']
@@ -128,7 +128,7 @@ def CreatePost(request):
 
 #creating comments
 def CreateComment(request):
-    db = mysql.connector.connect(host = "localhost",user = "kachi",password = "kachiuser",db = "Blog")
+    db = dbconnect.connection()  
     cursor = db.cursor()
     userid = request.form['userid']
     postid = request.form['postid']
@@ -139,7 +139,7 @@ def CreateComment(request):
 
     #check if post exists
     if checkpost(postid) != 1:
-        return "Error, this post does not exist"
+        return "Error, this post does not exist" 
         
     comment = request.form['comment']
     commentid = 0
@@ -158,7 +158,7 @@ def CreateComment(request):
 
 #display a user profile
 def DisplayUser(request):
-    db = mysql.connector.connect(host = "localhost",user = "kachi",password = "kachiuser",db = "Blog")
+    db = dbconnect.connection()  
     cursor = db.cursor()
     fname = request.form['fname']
     lname = request.form['lname']
@@ -195,7 +195,7 @@ def DisplayUser(request):
 
 #display posts
 def DisplayPosts():
-    db = mysql.connector.connect(host = "localhost",user = "kachi",password = "kachiuser",db = "Blog")
+    db = dbconnect.connection()  
     cursor = db.cursor()
     display = '''SELECT POSTID, TITLE, CONTENT, LIKES FROM POSTS'''
     list = []
@@ -224,7 +224,7 @@ def DisplayPosts():
 
 #display posts and comments
 def DisplayBlog():
-    db = mysql.connector.connect(host = "localhost",user = "kachi",password = "kachiuser",db = "Blog")
+    db = dbconnect.connection()  
     cursor = db.cursor()
     
     display = '''SELECT POSTID,USERID,TITLE, CONTENT, LIKES FROM POSTS'''
@@ -275,7 +275,7 @@ def DisplayBlog():
 
 #displaying all users of table
 def Display():
-    db = mysql.connector.connect(host = "localhost",user = "kachi",password = "kachiuser",db = "Blog")
+    db = dbconnect.connection()  
     cursor = db.cursor()
     display = """SELECT * FROM Users """
 
@@ -313,7 +313,7 @@ def Display():
 
 #delete user
 def DeleteUser(request):
-    db = mysql.connector.connect(host = "localhost",user = "kachi",password = "kachiuser",db = "Blog")
+    db = dbconnect.connection()  
     cursor = db.cursor()
     userid = request.form['userid']
     fname = request.form['fname']
@@ -354,7 +354,7 @@ def DeleteUser(request):
 
 # deleting posts
 def DeletePost(request):
-    db = mysql.connector.connect(host = "localhost",user = "kachi",password = "kachiuser",db = "Blog")
+    db = dbconnect.connection()  
     cursor = db.cursor()
     userid = request.form['userid']
     post = request.form['postid']
@@ -395,7 +395,7 @@ def DeletePost(request):
 
 #deleting comments
 def DeleteComment(request):
-    db = mysql.connector.connect(host = "localhost",user = "kachi",password = "kachiuser",db = "Blog")
+    db = dbconnect.connection()  
     cursor = db.cursor()
     userid = request.form['userid']
     commentid = request.form['commentid']
@@ -436,7 +436,7 @@ def DeleteComment(request):
 
 #liking a post
 def Like(request):
-    db = mysql.connector.connect(host = "localhost",user = "kachi",password = "kachiuser",db = "Blog")
+    db = dbconnect.connection()  
     cursor = db.cursor()
 
     id = request.form['postid']
@@ -454,7 +454,7 @@ def Like(request):
 
 #unliking a post
 def Unlike(request):
-    db = mysql.connector.connect(host = "localhost",user = "kachi",password = "kachiuser",db = "Blog")
+    db = dbconnect.connection()  
     cursor = db.cursor()
 
     id = request.form['postid']
@@ -483,7 +483,7 @@ def Interactions(request):
 #granting access to blog
 def Login(request):
 
-    db = mysql.connector.connect(host = "localhost",user = "kachi",password = "kachiuser",db = "Blog")
+    db = dbconnect.connection()  
     cursor = db.cursor()
     loop = True
 
@@ -509,4 +509,3 @@ def Login(request):
 
     
     
-db.close()
