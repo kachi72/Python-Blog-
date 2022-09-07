@@ -192,6 +192,7 @@ def DisplayUser(request):
         list.append("Enter Last name")
     if bool(userid) != 1:
         list.append("Enter userid")
+        
     if list:
         return list
     #check if user exists
@@ -260,7 +261,6 @@ def DisplayBlog():
     display = '''SELECT POSTID,USERID,TITLE, CONTENT, LIKES FROM POSTS'''
     display2 = ''' SELECT POSTID,COMMENT FROM COMMENTS'''
     display3 = ''' SELECT FIRSTNAME,LASTNAME FROM USERS WHERE USERID = %s '''
-    display4 = '''SELECT POSTID,USERID,TITLE,CONTENT,LIKES FROM '''
 
     cursor.execute(display)
     result = cursor.fetchall()
@@ -439,22 +439,19 @@ def DeleteComment(request):
     for row in result:
         commentid = row[0]
         Userid = row[1]
-        Postid = row[2]
-        Comment = row[3]
-        date = row[4]
         
     Userid2 = str(Userid)
     #checks if user have access to delete comment
     if (userid!= Userid2):
         return('You do not have access to delete this comment')
 
-    message = ''' DELETE FROM COMMENTS WHERE COMMENTID = %s ''';
+    message = ''' DELETE FROM COMMENTS WHERE COMMENTID = %s '''
     try:
         cursor.execute(message,info)
         db.commit()
         return('Comment successfully deleted')
     except:
-        return("Unsuccessful")
+        return("Error deleting post")
 
     
 
@@ -478,10 +475,10 @@ def Like(request):
         db.commit()
         return('Post was successfully liked')
     except:
-        return("Error in liking this post")
         db.rollback()
+        return("Error, unable to like this post")
 
-    return
+    
 
 #unliking a post
 def Unlike(request):
@@ -501,8 +498,8 @@ def Unlike(request):
         db.commit()
         return('Post was successfully unliked')
     except:
-        return("Error in unliking this post")
         db.rollback()
+        return("Error in unliking this post")
 
     return
 
@@ -530,11 +527,10 @@ def Login(request):
 
     while(loop):
         user = request.form['email']
-        while(1):
-            if checkmail(user) == 1:
-                break
-            else:
-                return ("Invalid email")
+        
+        if checkmail(user) != 1:
+            return ("Invalid email")
+
         password = request.form['password']
         list = []
         if bool(user) != 1:
