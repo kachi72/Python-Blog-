@@ -515,7 +515,7 @@ def Interactions(request):
     elif(request.form['option'].lower()) == 'unlike':
         return Unlike(request)
     else:
-        return "Invalid input"
+        return "Invalid input. Enter option: like or unlike"
 
 
 #granting access to blog
